@@ -1,0 +1,216 @@
+/* ==========================================================================
+   FluentFox — transparent Firefox chrome
+   Works with horizontal tabs and native vertical tabs (sidebar.revamp).
+   Requires prefs from theme/user.js (see README).
+   ========================================================================== */
+
+:root {
+  --ffox-glass: color-mix(in srgb, currentColor 10%, transparent);
+  --ffox-glass-hover: color-mix(in srgb, currentColor 16%, transparent);
+  --ffox-glass-selected: color-mix(in srgb, currentColor 18%, transparent);
+  --ffox-glass-strong: color-mix(in srgb, currentColor 22%, transparent);
+  --ffox-border: color-mix(in srgb, currentColor 12%, transparent);
+
+  --lwt-accent-color: transparent !important;
+  --lwt-text-color: inherit !important;
+  --toolbar-bgcolor: transparent !important;
+  --toolbar-color: inherit !important;
+  --toolbarbutton-hover-background: var(--ffox-glass-hover) !important;
+  --toolbarbutton-active-background: var(--ffox-glass-strong) !important;
+  --tab-selected-bgcolor: var(--ffox-glass-selected) !important;
+  --tab-hover-background-color: var(--ffox-glass-hover) !important;
+  --lwt-sidebar-background-color: transparent !important;
+  --tabpanel-background-color: transparent !important;
+  --toolbox-bgcolor: transparent !important;
+  --toolbox-bgcolor-inactive: transparent !important;
+  --chrome-content-separator-color: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Window + toolbox
+   -------------------------------------------------------------------------- */
+
+#main-window,
+#browser,
+#appcontent,
+#tabbrowser-tabbox,
+#tabbrowser-tabpanels,
+.browserContainer,
+.browserStack,
+browser {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+#navigator-toolbox {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+#nav-bar,
+#PersonalToolbar,
+#TabsToolbar,
+#titlebar,
+#toolbar-menubar {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#nav-bar {
+  border-top: none !important;
+}
+
+/* Remove the content outline that appears with sidebar.revamp */
+@media (-moz-bool-pref: "sidebar.revamp") {
+  #tabbrowser-tabbox {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Horizontal tabs
+   -------------------------------------------------------------------------- */
+
+#TabsToolbar {
+  background: transparent !important;
+}
+
+.tab-background {
+  border-radius: 8px !important;
+  background-image: none !important;
+}
+
+.tab-background:not([selected]):not([multiselected]) {
+  background-color: transparent !important;
+}
+
+.tabbrowser-tab:hover .tab-background:not([selected]) {
+  background-color: var(--ffox-glass-hover) !important;
+}
+
+.tab-background[selected],
+.tab-background[multiselected] {
+  background-color: var(--ffox-glass-selected) !important;
+  box-shadow: none !important;
+  outline: 1px solid var(--ffox-border) !important;
+  outline-offset: -1px !important;
+}
+
+#tabbrowser-tabs {
+  background: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Native vertical tabs / sidebar revamp (Firefox 136+)
+   -------------------------------------------------------------------------- */
+
+#sidebar-main,
+#sidebar-box,
+#sidebar-container,
+#sidebar,
+#sidebar-header,
+#sidebar-splitter,
+#vertical-tabs {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+#sidebar-main {
+  border-inline-end: 1px solid var(--ffox-border) !important;
+}
+
+#vertical-tabs .tab-background:not([selected]):not([multiselected]) {
+  background-color: transparent !important;
+}
+
+#vertical-tabs .tabbrowser-tab:hover .tab-background:not([selected]) {
+  background-color: var(--ffox-glass-hover) !important;
+}
+
+#vertical-tabs .tab-background[selected],
+#vertical-tabs .tab-background[multiselected] {
+  background-color: var(--ffox-glass-selected) !important;
+}
+
+#vertical-tabs-newtab-button:hover {
+  background-color: var(--ffox-glass-hover) !important;
+}
+
+/* Collapsed vertical sidebar still transparent */
+#sidebar-main[sidebar-launcher-expanded="false"],
+#tabbrowser-tabs[orient="vertical"] {
+  background: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   URL bar
+   -------------------------------------------------------------------------- */
+
+#urlbar {
+  --toolbar-field-background-color: var(--ffox-glass) !important;
+  --toolbar-field-focus-background-color: var(--ffox-glass-strong) !important;
+}
+
+#urlbar:not([focused]) > #urlbar-background,
+#urlbar:not([open]) > #urlbar-background {
+  background-color: var(--ffox-glass) !important;
+  border-color: var(--ffox-border) !important;
+  box-shadow: none !important;
+}
+
+#urlbar[focused] > #urlbar-background,
+#urlbar[open] > #urlbar-background {
+  background-color: var(--ffox-glass-strong) !important;
+  border-color: var(--ffox-border) !important;
+}
+
+#urlbar-results,
+.urlbarView {
+  background-color: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Toolbar buttons + findbar
+   -------------------------------------------------------------------------- */
+
+toolbarbutton.toolbarbutton-1:not([disabled]):hover > .toolbarbutton-icon,
+toolbarbutton.toolbarbutton-1:not([disabled]):hover > .toolbarbutton-text,
+toolbarbutton.toolbarbutton-1:not([disabled])[open] > .toolbarbutton-icon {
+  background-color: var(--ffox-glass-hover) !important;
+}
+
+.findbar-container,
+.browser-toolbox-background {
+  background: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   Panels / menus — stay readable while letting OS blur show through
+   -------------------------------------------------------------------------- */
+
+menupopup,
+panel:not(#autoscroller),
+.toolbar-menupopup {
+  --panel-background: color-mix(in srgb, Canvas 82%, transparent) !important;
+  --panel-border-color: var(--ffox-border) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Status / miscellaneous
+   -------------------------------------------------------------------------- */
+
+#statuspanel-label {
+  background-color: var(--ffox-glass-strong) !important;
+  border-color: var(--ffox-border) !important;
+}
+
+#sidebar-box[sidebarcommand] {
+  background: transparent !important;
+}

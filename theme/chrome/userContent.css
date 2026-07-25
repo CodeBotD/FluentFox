@@ -1,0 +1,42 @@
+/* ==========================================================================
+   FluentFox — transparent built-in pages (new tab / home / blank)
+   Site pages are handled by the FluentFox extension + my-internet styles.
+   ========================================================================== */
+
+@-moz-document url("about:newtab"),
+               url("about:home"),
+               url("about:blank"),
+               url("about:privatebrowsing") {
+  :root {
+    --newtab-background-color: transparent !important;
+    --newtab-background-color-secondary: transparent !important;
+    --lwt-accent-color: transparent !important;
+    --in-content-page-background: transparent !important;
+    --in-content-box-background: color-mix(in srgb, currentColor 8%, transparent) !important;
+  }
+
+  html,
+  body,
+  #root,
+  .outer-wrapper,
+  .activity-stream,
+  .activity-stream .outer-wrapper,
+  .base-content-fallback,
+  .body-wrapper,
+  main,
+  .non-collapsible-section,
+  .discovery-stream {
+    background: transparent !important;
+    background-image: none !important;
+    background-color: transparent !important;
+  }
+
+  .top-site-outer .tile,
+  .card-outer,
+  .search-wrapper .search-handoff-button,
+  .search-wrapper input {
+    background-color: color-mix(in srgb, currentColor 10%, transparent) !important;
+    border-color: color-mix(in srgb, currentColor 12%, transparent) !important;
+    box-shadow: none !important;
+  }
+}

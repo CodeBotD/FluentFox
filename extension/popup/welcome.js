@@ -1,0 +1,557 @@
+class WelcomeScreen {
+  /**
+   * Initializes the welcome screen and shows the first step.
+   */
+  constructor() {
+    this.currentStep = 1;
+    this.totalSteps = 5;
+    this.selectedThemeMode = null;
+    this.disclaimerAccepted = false;
+
+    this.createWelcomeOverlay();
+    this.bindEvents();
+  }
+
+  /**
+   * Creates the HTML structure for the welcome overlay and appends it to the body.
+   */
+  createWelcomeOverlay() {
+    const overlay = document.createElement("div");
+    overlay.id = "welcome-overlay";
+    overlay.className = "welcome-overlay";
+
+    overlay.innerHTML = `
+      <div class="welcome-container">
+        <div class="welcome-progress">
+          <div class="progress-dot active"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <div class="welcome-step step-welcome active" data-step="1">
+          <img src="../assets/images/logo.png" alt="FluentFox Logo" class="welcome-logo">
+          <h1 class="welcome-title">FluentFox</h1>
+          <p class="welcome-subtitle">Welcome to a cleaner, more elegant internet experience!</p>
+          <div class="welcome-actions">
+            <button class="welcome-button primary" id="setup-start">
+              <i class="fas fa-arrow-right"></i>
+              Setup
+            </button>
+          </div>
+        </div>
+
+        <div class="welcome-step step-disclaimer" data-step="2">
+          <h2 class="disclaimer-title">Important Disclaimer</h2>
+          <div class="disclaimer-content">
+            <div class="disclaimer-highlight">
+              <p><strong>⚠️ This is a third party modification.<br/> </strong> If you encounter any issues regarding transparency or website colors, <br/><strong>DO NOT</strong> report issues to the official browser repository or issue tracker.<br/>Instead use the built-in issue/bug report feature in this addon or report it directly to the developer.</p>
+            </div>
+
+            <p><strong>Some common issues you may experience are:</strong></p>
+            <ol class="disclaimer-list">
+              <li>White background</li>
+              <li>Unreadable text</li>
+              <li>No transparency</li>
+              <li>No blur</li>
+              <li>And many others</li>
+            </ol>
+
+            <div class="disclaimer-instructions">
+              <p><strong>📖 Before reporting issues:</strong></p>
+              <p>First check the <strong>FAQ</strong> in the addon popup page at the bottom. <br/>If that does not solve your problem, then reach out to me through the proper channels.</p>
+            </div>
+
+            <div class="disclaimer-question">
+              <p><strong>Do you understand this disclaimer and agree to comply with the given options and <br/>not to bother the browser development and other developers?</strong></p>
+            </div>
+
+          <div class="disclaimer-checkbox">
+            <input type="checkbox" id="understand-checkbox">
+            <label for="understand-checkbox">Yes, <br/>I understand and agree</label>
+          </div></div>
+          <div class="welcome-actions">
+            <button class="welcome-button secondary" id="disclaimer-back">
+              <i class="fas fa-arrow-left"></i>
+              Back
+            </button>
+            <button class="welcome-button primary" id="disclaimer-next" disabled>
+              Next
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="welcome-step step-theme-mode" data-step="3">
+          <h2 class="theme-mode-title">Choose Your Theming Preference</h2>
+          <p class="theme-mode-description">How would you like themes to be applied?</p>
+
+          <div class="theme-mode-options">
+            <div class="theme-mode-option" data-mode="blacklist">
+              <h4>Enable themes by default</h4>
+              <p>Themes will be applied to all websites automatically. You can skip websites if needed.</p>
+            </div>
+            <div class="theme-mode-option" data-mode="whitelist">
+              <h4>Only apply to websites I choose</h4>
+              <p>Themes will only be applied to websites you specifically select in the addon.</p>
+            </div>
+          </div>
+
+          <div class="welcome-actions">
+            <button class="welcome-button secondary" id="theme-mode-back">
+              <i class="fas fa-arrow-left"></i>
+              Back
+            </button>
+            <button class="welcome-button primary" id="theme-mode-next" disabled>
+              Next
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="welcome-step step-fetch-styles" data-step="4">
+          <h2 class="fetch-styles-title">Download Latest Themes</h2>
+          <p class="fetch-styles-description">Click below to fetch the latest themes from our repository.</p>
+
+          <div class="fetch-styles-actions">
+            <button class="welcome-button primary fetch-styles-button" id="welcome-fetch-styles">
+              <i class="fas fa-download"></i>
+              Fetch Latest Styles
+            </button>
+
+            <div class="auto-update-container">
+              <label class="toggle-switch">
+                <input type="checkbox" id="welcome-auto-update" checked>
+                <span class="slider round"></span>
+              </label>
+              <span class="toggle-label">Auto Update Styles (2h)</span>
+            </div>
+          </div>
+
+          <div id="welcome-fetch-status" class="fetch-status" style="display: none;"></div>
+
+          <div class="welcome-actions" style="margin-top: 32px;">
+            <button class="welcome-button secondary" id="fetch-styles-back">
+              <i class="fas fa-arrow-left"></i>
+              Back
+            </button>
+            <button class="welcome-button primary" id="fetch-styles-next" disabled>
+              Next
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="welcome-step step-complete" data-step="5">
+          <div class="complete-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h2 class="complete-title">All Done!</h2>
+          <p class="complete-description">
+            FluentFox extension is now ready to use!<br>
+            Read FAQ if you find anything confusing or reach out for help.
+          </p>
+
+          <div class="welcome-actions">
+            <button class="welcome-button primary" id="welcome-close">
+              <i class="fas fa-check"></i>
+              Start Using FluentFox
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+  }
+
+  /**
+   * Binds user interaction events to the welcome screen elements.
+   */
+  bindEvents() {
+    document.getElementById("setup-start").addEventListener("click", () => {
+      this.nextStep();
+    });
+
+    const understandCheckbox = document.getElementById("understand-checkbox");
+    const disclaimerNext = document.getElementById("disclaimer-next");
+
+    understandCheckbox.addEventListener("change", (e) => {
+      this.disclaimerAccepted = e.target.checked;
+      disclaimerNext.disabled = !this.disclaimerAccepted;
+    });
+
+    document.getElementById("disclaimer-back").addEventListener("click", () => {
+      this.previousStep();
+    });
+
+    document.getElementById("disclaimer-next").addEventListener("click", () => {
+      this.nextStep();
+    });
+
+    const themeModeOptions = document.querySelectorAll(".theme-mode-option");
+    const themeModeNext = document.getElementById("theme-mode-next");
+
+    themeModeOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        themeModeOptions.forEach((opt) => opt.classList.remove("selected"));
+        option.classList.add("selected");
+        this.selectedThemeMode = option.dataset.mode;
+        themeModeNext.disabled = false;
+      });
+    });
+
+    document.getElementById("theme-mode-back").addEventListener("click", () => {
+      this.previousStep();
+    });
+
+    document.getElementById("theme-mode-next").addEventListener("click", () => {
+      this.applyThemeMode();
+      this.nextStep();
+    });
+
+    document
+      .getElementById("welcome-fetch-styles")
+      .addEventListener("click", () => {
+        this.fetchStyles();
+      });
+
+    document
+      .getElementById("fetch-styles-back")
+      .addEventListener("click", () => {
+        this.previousStep();
+      });
+
+    document
+      .getElementById("fetch-styles-next")
+      .addEventListener("click", () => {
+        this.nextStep();
+      });
+
+    document.getElementById("welcome-close").addEventListener("click", () => {
+      this.closeWelcome();
+    });
+  }
+
+  /**
+   * Advances the welcome screen to the next step.
+   */
+  nextStep() {
+    if (this.currentStep < this.totalSteps) {
+      this.currentStep++;
+      this.updateStep();
+      this.updateProgress();
+    }
+  }
+
+  /**
+   * Returns the welcome screen to the previous step.
+   */
+  previousStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+      this.updateStep();
+      this.updateProgress();
+    }
+  }
+
+  /**
+   * Updates the visibility of step containers based on current step index.
+   */
+  updateStep() {
+    const steps = document.querySelectorAll(".welcome-step");
+    steps.forEach((step, index) => {
+      step.classList.toggle("active", index + 1 === this.currentStep);
+    });
+  }
+
+  /**
+   * Updates the progress indicator dots.
+   */
+  updateProgress() {
+    const dots = document.querySelectorAll(".progress-dot");
+    dots.forEach((dot, index) => {
+      dot.classList.remove("active", "completed");
+      if (index + 1 === this.currentStep) {
+        dot.classList.add("active");
+      } else if (index + 1 < this.currentStep) {
+        dot.classList.add("completed");
+      }
+    });
+  }
+
+  /**
+   * Saves the user's chosen theme mode to storage.
+   */
+  async applyThemeMode() {
+    try {
+      const BROWSER_STORAGE_KEY = "transparentZenSettings";
+      const data = await browser.storage.local.get(BROWSER_STORAGE_KEY);
+      const settings = data[BROWSER_STORAGE_KEY] || {};
+
+      if (this.selectedThemeMode === "whitelist") {
+        settings.whitelistStyleMode = true;
+        settings.forceStyling = false;
+      } else {
+        settings.whitelistStyleMode = false;
+        settings.forceStyling = false;
+      }
+
+      settings.enableStyling = true;
+      settings.autoUpdate = document.getElementById(
+        "welcome-auto-update"
+      ).checked;
+
+      await browser.storage.local.set({ [BROWSER_STORAGE_KEY]: settings });
+    } catch (error) {
+      console.error("Error applying theme mode:", error);
+    }
+  }
+
+  /**
+   * Fetches latest theme styles from the repository.
+   */
+  async fetchStyles() {
+    const fetchButton = document.getElementById("welcome-fetch-styles");
+    const fetchStatus = document.getElementById("welcome-fetch-status");
+    const nextButton = document.getElementById("fetch-styles-next");
+
+    fetchButton.disabled = true;
+    fetchButton.innerHTML =
+      '<i class="fas fa-spinner fa-spin"></i> Fetching...';
+    fetchStatus.style.display = "block";
+    fetchStatus.className = "fetch-status loading";
+    fetchStatus.textContent = "Downloading latest themes...";
+
+    try {
+      const DEFAULT_REPOSITORY_URL =
+        "https://sameerasw.github.io/my-internet/styles.json";
+      const repoUrlData = await browser.storage.local.get(
+        "stylesRepositoryUrl"
+      );
+      const repositoryUrl =
+        repoUrlData.stylesRepositoryUrl || DEFAULT_REPOSITORY_URL;
+
+      const response = await fetch(repositoryUrl, {
+        headers: { "Cache-Control": "no-cache" },
+      });
+
+      if (!response.ok)
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+
+      const styles = await response.json();
+
+      const STYLES_MAPPING_KEY = "stylesMapping";
+      let mappingData;
+      if (styles.mapping && Object.keys(styles.mapping).length > 0) {
+        mappingData = { mapping: styles.mapping };
+      } else {
+        const existingData = await browser.storage.local.get(STYLES_MAPPING_KEY);
+        mappingData = existingData[STYLES_MAPPING_KEY] || { mapping: {} };
+      }
+
+      await browser.storage.local.set({ styles, [STYLES_MAPPING_KEY]: mappingData });
+
+      const BROWSER_STORAGE_KEY = "transparentZenSettings";
+      const data = await browser.storage.local.get(BROWSER_STORAGE_KEY);
+      const settings = data[BROWSER_STORAGE_KEY] || {};
+      settings.autoUpdate = document.getElementById(
+        "welcome-auto-update"
+      ).checked;
+      settings.lastFetchedTime = Date.now();
+      await browser.storage.local.set({ [BROWSER_STORAGE_KEY]: settings });
+
+      fetchStatus.className = "fetch-status success";
+      fetchStatus.textContent = `Successfully downloaded ${
+        Object.keys(styles.website || {}).length
+      } website themes!`;
+      fetchButton.innerHTML = '<i class="fas fa-check"></i> Download Complete';
+      nextButton.disabled = false;
+
+      if (settings.autoUpdate) {
+        try {
+          await browser.runtime.sendMessage({ action: "enableAutoUpdate" });
+        } catch (e) {
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching styles:", error);
+      fetchStatus.className = "fetch-status error";
+      fetchStatus.textContent = `Failed to download themes: ${error.message}`;
+      fetchButton.innerHTML =
+        '<i class="fas fa-exclamation-triangle"></i> Retry Download';
+      fetchButton.disabled = false;
+    }
+  }
+
+  /**
+   * Closes the welcome screen overlay.
+   */
+  closeWelcome() {
+    const overlay = document.getElementById("welcome-overlay");
+    overlay.classList.add("hidden");
+
+    this.markWelcomeAsShown();
+
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
+  }
+
+  /**
+   * Persists the fact that the welcome screen has been viewed.
+   */
+  async markWelcomeAsShown() {
+    try {
+      const BROWSER_STORAGE_KEY = "transparentZenSettings";
+      const data = await browser.storage.local.get(BROWSER_STORAGE_KEY);
+      const settings = data[BROWSER_STORAGE_KEY] || {};
+
+      settings.welcomeShown = true;
+      await browser.storage.local.set({ [BROWSER_STORAGE_KEY]: settings });
+    } catch (error) {
+      console.error("Error marking welcome as shown:", error);
+    }
+  }
+
+  /**
+   * Configures the overlay to show only the agreement flow.
+   */
+  showAgreementOnly() {
+    this.show();
+
+    this.currentStep = 2;
+    this.totalSteps = 2;
+    this.isAgreementOnlyFlow = true;
+
+    const progressContainer = document.querySelector(".welcome-progress");
+    if (progressContainer) {
+      progressContainer.innerHTML = `
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+      `;
+    }
+
+    this.updateStepForAgreementFlow();
+    this.updateDisclaimerForAgreementFlow();
+  }
+
+  /**
+   * Updates step visibility specifically for the agreement flow.
+   */
+  updateStepForAgreementFlow() {
+    const steps = document.querySelectorAll(".welcome-step");
+    steps.forEach((step) => {
+      step.classList.remove("active");
+    });
+
+    if (this.currentStep === 2) {
+      document.querySelector(".step-disclaimer").classList.add("active");
+    } else if (this.currentStep === 5) {
+      document.querySelector(".step-complete").classList.add("active");
+    }
+  }
+
+  /**
+   * Updates UI buttons for the agreement flow.
+   */
+  updateDisclaimerForAgreementFlow() {
+    const disclaimerNext = document.getElementById("disclaimer-next");
+    const disclaimerBack = document.getElementById("disclaimer-back");
+
+    if (disclaimerBack) {
+      disclaimerBack.style.display = "none";
+    }
+
+    if (disclaimerNext) {
+      disclaimerNext.removeEventListener("click", this.nextStep);
+      disclaimerNext.addEventListener("click", () => {
+        if (this.isAgreementOnlyFlow) {
+          this.currentStep = 5;
+          this.updateStepForAgreementFlow();
+          this.updateProgressForAgreementFlow();
+        } else {
+          this.nextStep();
+        }
+      });
+    }
+  }
+
+  /**
+   * Updates progress dots for the agreement flow.
+   */
+  updateProgressForAgreementFlow() {
+    const dots = document.querySelectorAll(".progress-dot");
+    if (this.isAgreementOnlyFlow) {
+      dots.forEach((dot, index) => {
+        dot.classList.remove("active", "completed");
+        if (this.currentStep === 2 && index === 0) {
+          dot.classList.add("completed");
+        } else if (this.currentStep === 5 && index === 1) {
+          dot.classList.add("active");
+        }
+      });
+    }
+  }
+
+  /**
+   * Shows the welcome overlay.
+   */
+  show() {
+    const overlay = document.getElementById("welcome-overlay");
+    if (overlay) {
+      overlay.classList.remove("hidden");
+    }
+  }
+
+  /**
+   * Hides the welcome overlay.
+   */
+  hide() {
+    const overlay = document.getElementById("welcome-overlay");
+    if (overlay) {
+      overlay.classList.add("hidden");
+    }
+  }
+}
+
+/**
+ * Checks extension state and determines if the welcome screen should be shown.
+ */
+async function checkAndShowWelcome() {
+  try {
+    const BROWSER_STORAGE_KEY = "transparentZenSettings";
+    const data = await browser.storage.local.get([
+      BROWSER_STORAGE_KEY,
+      "styles",
+    ]);
+
+    const settings = data[BROWSER_STORAGE_KEY] || {};
+    const hasStyles =
+      data.styles &&
+      data.styles.website &&
+      Object.keys(data.styles.website).length > 0;
+    const welcomeShown = settings.welcomeShown;
+
+    if (!hasStyles) {
+      const welcome = new WelcomeScreen();
+      welcome.show();
+      return true;
+    }
+
+    if (hasStyles && (welcomeShown === undefined || welcomeShown === false)) {
+      const welcome = new WelcomeScreen();
+      welcome.showAgreementOnly();
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error("Error checking welcome screen status:", error);
+    return false;
+  }
+}
+
+window.WelcomeScreen = WelcomeScreen;
+window.checkAndShowWelcome = checkAndShowWelcome;

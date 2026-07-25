@@ -1,0 +1,18 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Node / web-ext
+node_modules/
+web-ext-artifacts/
+npm-debug.log*
+
+# Local Firefox install simulation
+.test-firefox/
+
+# Editor
+.idea/
+.vscode/
+*.code-workspace

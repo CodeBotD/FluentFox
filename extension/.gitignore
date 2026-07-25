@@ -1,0 +1,20 @@
+# Firefox extension signing keys
+.web-ext-artifacts/
+.web-ext-config.js
+.web-extension-id
+.amo-upload-uuid
+# API keys and secrets
+.env
+secrets.json
+config.json
+# Node.js dependencies
+node_modules/
+dist/
+builds/
+
+# macos
+.DS_Store
+.AppleDouble
+.LSOverride
+
+.zip
