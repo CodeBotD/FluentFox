@@ -5,7 +5,7 @@
   "description": "Transparent, immersive website styles for Firefox — powered by the Zen Internet / my-internet theme library.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "fluentfox@dimitriusfarida.github.io",
+      "id": "fluentfox@CodeBotD.github.io",
       "strict_min_version": "115.0",
       "data_collection_permissions": {
         "required": ["none"]

@@ -1535,7 +1535,7 @@ new (class ExtensionPopup {
    */
   openWhatsNew() {
     browser.tabs.create({
-      url: "https://github.com/dimitriusfarida/FluentFox/releases",
+      url: "https://github.com/CodeBotD/FluentFox/releases",
     });
   }
 
@@ -1544,7 +1544,7 @@ new (class ExtensionPopup {
    */
   openHowToUse() {
     browser.tabs.create({
-      url: "https://github.com/dimitriusfarida/FluentFox#readme",
+      url: "https://github.com/CodeBotD/FluentFox#readme",
     });
   }
 
@@ -1742,22 +1742,22 @@ new (class ExtensionPopup {
         template: "bug_report",
       },
       2: {
-        owner: "dimitriusfarida",
+        owner: "CodeBotD",
         repo: "FluentFox",
         title: "[BUG] Extension Issue",
       },
       3: {
-        owner: "dimitriusfarida",
+        owner: "CodeBotD",
         repo: "FluentFox",
         title: "[TRANSPARENCY] Browser Transparency Issue",
       },
       4: {
-        owner: "dimitriusfarida",
+        owner: "CodeBotD",
         repo: "FluentFox",
         title: "[FEATURE] Feature Request",
       },
       5: {
-        owner: "dimitriusfarida",
+        owner: "CodeBotD",
         repo: "FluentFox",
         title: "[OTHER] General Issue",
       },
